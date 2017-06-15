@@ -12,7 +12,6 @@ def main():
     args.func(args)
 # End def
 
-
 def _get_args():
     parser = argparse.ArgumentParser(description='Some simple time operations')
 
@@ -25,8 +24,8 @@ def _get_args():
     add_parser.set_defaults(func=_add_date)
 
     delta_parser = subparsers.add_parser('delta', help='Find the number of days between two dates')
-    delta_parser.add_argument('first_date', help='First date. Date must be in ISO 8601 format, or "today" for the current, local date')
-    delta_parser.add_argument('second_date', help='Second date. Date must be in ISO 8601 format, or "today" for the current, local date')
+    delta_parser.add_argument('date_1', help='First date. Date must be in ISO 8601 format, or "today" for the current, local date')
+    delta_parser.add_argument('date_2', help='Second date. Date must be in ISO 8601 format, or "today" for the current, local date')
     delta_parser.set_defaults(func=_delta_date)
 
     epoch_2_human_parser = subparsers.add_parser('epoch2human', help='Convert epoch timestamp to human readable format')
@@ -45,7 +44,6 @@ def _get_args():
     return parser.parse_args()
 # End def
 
-
 def _parse_date(date):
     if date == 'today':
        date = arrow.now().floor('day')
@@ -55,11 +53,11 @@ def _parse_date(date):
     # end if/else
 
     return date
+# End def
 
 def _add_date(args):
     add_date(args.start_date, args.unit, args.addend)
 # End def
-
 
 def add_date(start, unit, addend):
     """
@@ -82,7 +80,7 @@ def add_date(start, unit, addend):
 
 
 def _delta_date(args):
-    delta_date(args.start_date, args.end_date)
+    delta_date(args.date_1, args.date_2)
 # End def
 
 
@@ -93,7 +91,7 @@ def delta_date(start, end):
     start = _parse_date(start)
     end = _parse_date(end)
 
-    print(end - start)
+    print(abs(end - start))
 # End def
 
 def _epoch_2_human(args):
@@ -121,7 +119,7 @@ def human_2_epoch(date):
     """
     Convert human readable to epoch
     """
-    print(arrow.get(date).format('X'))
+    print(arrow.get(_parse_date(date)).format('X'))
 # End def
 
 def _yesterday(args):
