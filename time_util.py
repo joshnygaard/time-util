@@ -34,7 +34,7 @@ def _get_args():
     epoch_2_human_parser.set_defaults(func=_epoch_2_human)
 
     human_2_epoch_parser = subparsers.add_parser('human2epoch', help='Convert a human readable time to a Unix timestamp (in seconds)')
-    human_2_epoch_parser.add_argument('date', help='Date to convert. Date must be in ISO 8601 format, or "today" for the current, local date.')
+    human_2_epoch_parser.add_argument('date', help='Date to convert. Date must be in either ISO 8601 format, "today" for the beginning of the current, local date, or "now"')
     human_2_epoch_parser.set_defaults(func=_human_2_epoch)
 
     yesterday_parser = subparsers.add_parser('yesterday', help='Return Unix timestamp of the beginning and end of yesterday')
@@ -46,8 +46,9 @@ def _get_args():
 
 def _parse_date(date):
     if date == 'today':
-       date = arrow.now().floor('day')
-    # End if
+        date = arrow.now().floor('day')
+    elif date == 'now':
+        date = arrow.now()
     else:
         date = arrow.get(date)
     # end if/else
@@ -75,14 +76,11 @@ def add_date(start, unit, addend):
     else:
         print('ERROR: Do not recognise unit {}'.format(unit))
     # End if/else
-
 # End def
-
 
 def _delta_date(args):
     delta_date(args.date_1, args.date_2)
 # End def
-
 
 def delta_date(start, end):
     """
